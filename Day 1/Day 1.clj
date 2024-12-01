@@ -19,7 +19,8 @@
 
 (defn first-half
   []
-  (result (left-right (parse (slurp file-input)))))
+  (let [fn (comp result left-right parse slurp)]
+    (fn file-input)))
 
 (defn similarity
   [num lst]
@@ -37,4 +38,5 @@
 
 (defn second-half
   []
-  (total-sim (left-right-sim (left-right (parse (slurp file-input))))))
+  (let [fn (comp total-sim left-right-sim left-right parse slurp)]
+    (fn file-input)))
