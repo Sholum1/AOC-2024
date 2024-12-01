@@ -2,9 +2,9 @@
 
 (def file-input "input.in")
 
-(defn parse
+(defn parser
   "
-  Parser of the input.
+  Parserr of the input.
 
   Format:  '77442   88154'
            '71181   76363'
@@ -26,8 +26,8 @@
   Output: ([1 3 5] [2 4 6])
   "
   [lst]
-  (map sort
-       (apply map vector lst)))
+  (map sort                     ;; Sort
+       (apply map vector lst))) ;; Transpose
 
 (defn result
   "
@@ -43,7 +43,7 @@
 
 (defn first-half
   []
-  (let [fn (comp result left-right parse slurp)] ;; Function Composition
+  (let [fn (comp result left-right parser slurp)] ;; Function Composition
     (fn file-input)))
 
 (defn similarity
@@ -57,21 +57,21 @@
   [num lst]
   (count (filter #(= num %) (take-while #(<= % num) lst))))
 
-(defn left-right-sim
+(defn similarities
   "
-  For each element in nums1, computes the frequency it appears in nums2.
+  For each element in 'left', computes the frequency it appears in 'right'.
   It then removes the elements with frequency 0.
 
   Input:  ([1 2 3] [1 1 1 2 2 3 3 4 4 ...])
 
   Output: ([:num 1 :sim 3] [:num 2 :sim 2] [:num 3 :sim 4])
   "
-  [[nums1 nums2]]
-  (->> nums1
-       (map #(zipmap [:num :sim] [% (similarity % nums2)]))
+  [[left right]]
+  (->> left
+       (map #(zipmap [:num :sim] [% (similarity % right)]))
        (filter #(> (:sim %) 0))))
 
-(defn total-sim
+(defn total-similarity
   "Computes the total similarity score."
   [sims]
   (reduce #(+ (* (:num %2) (:sim %2)) %1) 0 sims))
@@ -79,5 +79,5 @@
 (defn second-half
   []
   ;; Function Composition
-  (let [fn (comp total-sim left-right-sim left-right parse slurp)]
+  (let [fn (comp total-similarity similarities left-right parser slurp)]
     (fn file-input)))
