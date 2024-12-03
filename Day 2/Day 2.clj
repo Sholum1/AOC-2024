@@ -45,22 +45,18 @@
   (let [fn (comp count diff<=3 inc-or-dec parser slurp)]
     (fn file-input)))
 
-(defn dampener [lst]
-  (let [len (count lst)]
-    (some
-     (fn [i]
-       (let [rem (concat (subvec lst 0 i) (subvec lst (inc i) len))]
-         (and (or (comp-seq rem) (comp-seq rem >)) (comp-diff rem 3))))
-     (range len))))
-
-(defn difference
-  [lst1 lst2]
-  (seq (clojure.set/difference (set lst1) (set lst2))))
+(defn dampener [lsts]
+  (filter
+   (fn [lst]
+     (let [len (count lst)]
+       (some
+        (fn [i]
+          (let [rem (concat (subvec lst 0 i) (subvec lst (inc i) len))]
+            (and (or (comp-seq rem) (comp-seq rem >)) (comp-diff rem 3))))
+        (range len))))
+   lsts))
 
 (defn second-half
   []
-  (let [data     (parser (slurp file-input))
-        safe     (diff<=3 (inc-or-dec data))
-        not-safe (difference data safe)]
-    (+ (count safe) (count (filter dampener not-safe)))))
-
+  (let [fn (comp count dampener parser slurp)]
+    (fn file-input)))
