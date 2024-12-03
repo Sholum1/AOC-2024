@@ -4,7 +4,7 @@
 
 (defn parser
   "
-  Parserr of the input.
+  Parser of the input.
 
   Format:  '77442   88154'
            '71181   76363'
