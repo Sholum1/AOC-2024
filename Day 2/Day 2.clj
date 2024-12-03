@@ -1,5 +1,4 @@
 (require 'clojure.string)
-(require 'clojure.set)
 
 (def file-input "input.in")
 
