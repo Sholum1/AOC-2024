@@ -1,4 +1,6 @@
-(require 'clojure.string)
+(ns day-1
+  (:require
+   [clojure.string]))
 
 (def file-input "input.in")
 
